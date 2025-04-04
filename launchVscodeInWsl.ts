@@ -1,4 +1,4 @@
-import { $ } from 'bun'
+import { spawn } from 'bun'
 import { parse } from 'ts-command-line-args'
 
 const args = parse({
@@ -7,6 +7,14 @@ const args = parse({
   distro: { type: String, alias: 'd', defaultValue: 'ubuntu' },
 })
 
-await $`${args.vscode} -n --remote=wsl+${args.distro} ${args.path
-  .replaceAll('\\', '/')
-  .replace(/\/\/wsl\.localhost\/.*?\//, '/')}`
+spawn({
+  windowsHide: false,
+  cmd: [
+    args.vscode,
+    '-n',
+    `--remote=wsl+${args.distro}`,
+    `${args.path
+      .replaceAll('\\', '/')
+      .replace(/\/\/wsl\.localhost\/.*?\//, '/')}`,
+  ],
+})
